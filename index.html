@@ -25,7 +25,6 @@
     </table>
 </div>
 
-
 <!-- add firebase CDN -->
 <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
@@ -53,23 +52,29 @@
                     <td>${value.message}</td>
                     <td>
                         <button onclick="readyForUpdate('${key}', this)" class="btn btn-primary btn-sm">Update</button>
-                        <button onclick="removeMess('${key}', this)" class="btn btn-danger btn-sm">Delete</button>
+                        <button onclick="removeMess('${key}')" class="btn btn-danger btn-sm">Delete</button>
                     </td>
                 </tr>
             `;
         }
+        console.log(key)
         dataContainer.innerHTML = htmlData
     })
 
+    function removeMess(uniqueId) {
+        //console.log(uniqueId);
+        database.ref('messages/' + uniqueId).remove()
+    }
+
     function readyForUpdate(uniqueId, elem) {
         var siblingId = elem.parentElement.parentElement.getElementsByTagName('td')
-
+        //console.log(siblingId)
         for (var i = 0;i < siblingId.length-1;i++){
             siblingId[i].contentEditable = true
             siblingId[i].classList.add('temp-update-class')
         }
 
-        elem.setAttribute('onclick', `updateNow(${uniqueId})`)
+        elem.setAttribute('onclick', `updateNow('${uniqueId}')`)
         elem.innerHTML = 'Send'
     }
 
@@ -83,11 +88,6 @@
         }
         var listRef = database.ref('messages/' + uniqueId)
         listRef.update(obj)
-    }
-
-    function removeMess(uniqueId) {
-        //console.log(uniqueId);
-        database.ref('messages/' + uniqueId).remove()
     }
 </script>
 </body>
